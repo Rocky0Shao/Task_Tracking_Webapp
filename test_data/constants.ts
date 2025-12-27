@@ -1,6 +1,6 @@
 import {Task} from '../types/custom'
-export const dummyTasks: Task[] = [
-  {
+export var dummyTasks: Task[] = [
+{
     id: "e52c34c5-5555-4422-92a1-8d2b7c6d1a10",
     user_id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
     title: "Complete project setup",
