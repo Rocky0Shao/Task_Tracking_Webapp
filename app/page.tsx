@@ -1,7 +1,13 @@
+import { TaskItem } from '@/components/TaskItem'
+import {Title} from '@/components/Title'
+import { dummyTasks } from '@/test_data/constants'
 export default function Home() {
   return (
-    <main className="p-10">
-      <h1 className="text-3xl font-bold text-blue-500">Task Tracker</h1>
+    <main>
+      <Title/>
+      <ul>  
+        {dummyTasks.map(task => <TaskItem key={task.id} task={task}/>)}
+      </ul>
     </main>
   )
 }
