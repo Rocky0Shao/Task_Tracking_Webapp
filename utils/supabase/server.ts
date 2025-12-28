@@ -1,29 +1,40 @@
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { createClient } from '@supabase/supabase-js'
+import { Task } from '@/types/custom'
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! 
 
-export async function createClient() {
-  const cookieStore = await cookies()
+export const supabase = createClient(supabaseUrl, supabaseKey)
 
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            )
-          } catch {
-            // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
-          }
-        },
-      },
-    }
-  )
+
+export async function getTasksFromDB(userId: string){
+  const { data, error } = await supabase
+  .from('tasks')
+  .select().eq('user_id', userId)
+
+  if(error){
+    console.error("Error fetching tasks:", error)
+    return []
+  }
+  return data
+}
+
+export async function addTaskToDB(userId: string, taskTitle: string, taskDescription?: string){
+  const newTask:Task = {
+      id: crypto.randomUUID(),
+      user_id: userId,
+      title: taskTitle,
+      is_completed: false,
+      created_at: new Date().toISOString(),
+      description: taskDescription
+  }
+  const { error } = await supabase
+  .from('tasks')
+  .insert(newTask)
+}
+
+export async function updateTaskToDB(userId: string, taskID: string){
+  const { error } = await supabase
+  .from('tasks')
+  .update({ is_complete: !is_complete })
+  .eq('id', taskID)
 }
