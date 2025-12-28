@@ -1,25 +1,31 @@
 'use client'
-import { Task } from "@/types/custom";
-import React from "react";
+import { useState } from "react"
 
-// export function NewTaskForm({onAdd}: {onAdd: (task: Task)=>void}){
-export function NewTaskForm(){
-    // const handleSubmit = (e:React.FormEvent){
-    //     e.preventDefault()
-    //     onAdd()
-    // }
+export function NewTaskForm({onAdd}: {onAdd: (t:string, d:string)=>void}){
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
 
+
+
+    const handleSubmit = (e:React.FormEvent) =>{
+        e.preventDefault()
+        onAdd(title,description)
+        
+        setTitle('')
+        setDescription('')
+    }
     return(
-        // <form onSubmit={()=>onAdd}>
-        <form>
+        <form onSubmit={handleSubmit}>
             <input 
                 type='text' 
                 placeholder="Add New Task here..."
+                onChange={e=>setTitle(e.target.value)}
             >
             </input>
             <input 
                 type='text-field'
-                placeholder="Write a few notes?">
+                placeholder="Write a few notes?"
+                onChange={e=>setDescription(e.target.value)}>
             </input>
             <button
                 type="submit">

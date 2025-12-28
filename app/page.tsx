@@ -10,8 +10,8 @@ export default function Home() {
   return (
     <main>
       <Title/>
-      {/* <NewTaskForm onAdd={addTask}/> */}
-      <NewTaskForm/>
+      <NewTaskForm onAdd={addTask}/>
+
       
       <ul>  
         {tasks.map(task => 
