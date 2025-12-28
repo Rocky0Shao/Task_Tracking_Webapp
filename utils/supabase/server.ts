@@ -1,9 +1,9 @@
+'use server'
 import { createClient } from '@supabase/supabase-js'
 import { Task } from '@/types/custom'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! 
-
-export const supabase = createClient(supabaseUrl, supabaseKey)
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 
 export async function getTasksFromDB(userId: string){
@@ -36,7 +36,7 @@ export async function addTaskToDB(userId: string, taskTitle: string, taskDescrip
 export async function toggleTaskInDB(taskID: string, currentStatus: boolean){
   const { error } = await supabase
   .from('tasks')
-  .update({ is_complete: !currentStatus })
+  .update({ is_completed: !currentStatus })
   .eq('id', taskID)
 
   if (error) console.error("Error toggling task:", error)

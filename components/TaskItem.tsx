@@ -1,7 +1,8 @@
 'use client'
 import {Task} from '../types/custom';
+import { handleToggleTask } from "@/app/actions"; 
 
-export function TaskItem({ task, toggle}: { task: Task, toggle:(id: string)=>void}){  
+export function TaskItem({ task}: { task: Task}){  
 
 
     return(
@@ -9,7 +10,7 @@ export function TaskItem({ task, toggle}: { task: Task, toggle:(id: string)=>voi
             <input
                 type="checkbox"
                 checked={task.is_completed}
-                onChange={()=>toggle(task.id)}
+                onChange={() => handleToggleTask(task.id, task.is_completed)}
             />
             <span className={task.is_completed? 'line-through':''}>
                 {task.title}

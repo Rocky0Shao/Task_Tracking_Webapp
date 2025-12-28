@@ -1,16 +1,14 @@
 'use client'
 import { useState } from "react"
-
-export function NewTaskForm({onAdd}: {onAdd: (t:string, d:string)=>void}){
+import { handleAddTask } from '@/app/actions'
+export function NewTaskForm(){
     const [title, setTitle] = useState('')
     const [description, setDescription] = useState('')
 
-
-
-    const handleSubmit = (e:React.FormEvent) =>{
+    const handleSubmit = async (e:React.FormEvent) =>{
         e.preventDefault()
-        onAdd(title,description)
-        
+        await handleAddTask(title, description)
+        console.log('Task Added:', title, description)
         setTitle('')
         setDescription('')
     }
@@ -19,12 +17,14 @@ export function NewTaskForm({onAdd}: {onAdd: (t:string, d:string)=>void}){
             <input 
                 type='text' 
                 placeholder="Add New Task here..."
+                value={title}
                 onChange={e=>setTitle(e.target.value)}
             >
             </input>
             <input 
-                type='text-field'
+                type='text'
                 placeholder="Write a few notes?"
+                value={description}
                 onChange={e=>setDescription(e.target.value)}>
             </input>
             <button
