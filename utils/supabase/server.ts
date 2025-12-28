@@ -9,7 +9,8 @@ export const supabase = createClient(supabaseUrl, supabaseKey)
 export async function getTasksFromDB(userId: string){
   const { data, error } = await supabase
   .from('tasks')
-  .select().eq('user_id', userId)
+  .select('*')
+  .eq('user_id', userId)
 
   if(error){
     console.error("Error fetching tasks:", error)
@@ -18,7 +19,7 @@ export async function getTasksFromDB(userId: string){
   return data
 }
 
-export async function addTaskToDB(userId: string, taskTitle: string, taskDescription?: string){
+export async function addTaskToDB(userId: string, taskTitle: string, taskDescription: string =''){
   const newTask:Task = {
       id: crypto.randomUUID(),
       user_id: userId,
@@ -32,9 +33,11 @@ export async function addTaskToDB(userId: string, taskTitle: string, taskDescrip
   .insert(newTask)
 }
 
-export async function updateTaskToDB(userId: string, taskID: string){
+export async function toggleTaskInDB(taskID: string, currentStatus: boolean){
   const { error } = await supabase
   .from('tasks')
-  .update({ is_complete: !is_complete })
+  .update({ is_complete: !currentStatus })
   .eq('id', taskID)
+
+  if (error) console.error("Error toggling task:", error)
 }

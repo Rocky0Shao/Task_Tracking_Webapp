@@ -7,3 +7,8 @@ i will make a type of task, following supabase table format.
 I created custom hook to add task to the unordered list and toggle individual tasks by their unique id.
 
 Currently the "task-list" is a dummy list of tasks. I'll change it to actually use supabse. 
+
+
+today (12/28) i copied example code from supabase doc to add task, toggle task and delete task. 
+
+refactor add/toggletask from client-side to server-side.
