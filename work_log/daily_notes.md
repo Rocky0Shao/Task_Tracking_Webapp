@@ -12,3 +12,5 @@ Currently the "task-list" is a dummy list of tasks. I'll change it to actually u
 today (12/28) i copied example code from supabase doc to add task, toggle task and delete task. 
 
 refactor add/toggletask from client-side to server-side.
+
+now the form that adds task is client-side, and it internally calls server-side action to add task. The supabse RLS is disabled currently, and a test user is created. 
