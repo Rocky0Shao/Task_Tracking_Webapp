@@ -1,7 +1,10 @@
+'use client'
 import { useState } from "react";
 import { Task } from "@/types/custom";
 import { dummyTasks } from "@/test_data/constants";
-import { time } from "console";
+
+//Custom hook.
+//Use: const { tasks, toggleTask } = useTasks();
 export function useTasks(){
     const [tasks, setTasks] = useState<Task[]>(dummyTasks)
     const addTask=(title:string, description:string='')=>{
@@ -17,8 +20,19 @@ export function useTasks(){
         setTasks(oldTasks => [newTask, ...oldTasks])    
     }
 
-    cost [task, toggleTask] = useState()
-    const toggleTask=(task:Task)=>{
-
+    //toggle task.is_complete?
+    const toggleTask = (id:string) =>{
+        setTasks(
+            oldTasks => oldTasks.map(
+                task => task.id === id
+                    ?{...task, is_completed:!task.is_completed} 
+                    : task
+            )
+        )
+    }
+    return {
+        tasks,
+        addTask,
+        toggleTask
     }
 }
