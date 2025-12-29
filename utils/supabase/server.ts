@@ -11,12 +11,13 @@ export async function getTasksFromDB(userId: string){
   .from('tasks')
   .select('*')
   .eq('user_id', userId)
-
+  .order('created_at', { ascending: false })
   if(error){
     console.error("Error fetching tasks:", error)
     return []
   }
-  return data
+    
+  return data.sort((a,b) => a.is_completed - b.is_completed)
 }
 
 export async function addTaskToDB(userId: string, taskTitle: string, taskDescription: string =''){
