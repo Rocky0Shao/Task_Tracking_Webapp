@@ -2,6 +2,8 @@
 import { signUpNewUser, signInWithEmail } from "@/utils/supabase/server";
 import {useState} from 'react'
 
+import {Title} from '@/components/Title'
+
 /*
 * isSignUP = false.
 *   signup or sign in depends on which button user click 
@@ -32,9 +34,12 @@ export default function loginPage(){
 
     
     return(
+        <>
+        
+        <Title/>
         <form 
             onSubmit={isSignUp? handleSubmitSignUp : handleSubmitSignIn} 
-            className="flex flex-col sm:flex-row gap-3 w-full max-w-3xl mx-auto mb-8"
+            className="flex flex-col sm:flex-row sm:flex-wrap gap-3 w-full max-w-3xl mx-auto mb-8"
         >
             <input 
                 type='email' 
@@ -62,6 +67,27 @@ export default function loginPage(){
             >
                 {isSignUp? "Sign Up" : "Log In"}
             </button>
+
+            <div className="blockw-full flex justify-center gap-4 mt-2">
+                <button
+                    type="button"
+                    onClick={()=>setIsSignUP(false)}
+                    className={`font-medium px-6 py-2 rounded-lg transition-colors border-b-4 ${
+                                            !isSignUp ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'
+                                        }`}                >
+                    Log In
+                </button>
+                <button
+                    type="button"
+                    onClick={()=>setIsSignUP(true)}
+                    className={`font-medium px-6 py-2 rounded-lg transition-colors border-b-4 ${
+                                            isSignUp ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'
+                                        }`}                >
+                    Sign Up
+                </button>
+            </div>
+
+
         </form>
+        </>
     )
-}
