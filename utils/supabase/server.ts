@@ -16,7 +16,8 @@ export async function getTasksFromDB(userId: string){
     console.error("Error fetching tasks:", error)
     return []
   }
-    
+  
+  //sort tasks, unfinished_tasks appear ontop the list
   return data.sort((a,b) => a.is_completed - b.is_completed)
 }
 
@@ -41,4 +42,21 @@ export async function toggleTaskInDB(taskID: string, currentStatus: boolean){
   .eq('id', taskID)
 
   if (error) console.error("Error toggling task:", error)
+}
+
+export async function signUpNewUser(email:string, password: string) {
+  const { data, error } = await supabase.auth.signUp({
+    email: email,
+    password: password,
+    options: {
+      emailRedirectTo: 'http://localhost:3000/',//TODO: Change to '/app' page
+    },
+  })
+}
+
+export async function signInWithEmail(email:string, password: string) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email,
+    password: password,
+  })
 }

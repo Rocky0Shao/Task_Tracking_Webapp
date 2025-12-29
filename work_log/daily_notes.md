@@ -14,3 +14,6 @@ today (12/28) i copied example code from supabase doc to add task, toggle task a
 refactor add/toggletask from client-side to server-side.
 
 now the form that adds task is client-side, and it internally calls server-side action to add task. The supabse RLS is disabled currently, and a test user is created. 
+
+
+today (12/29) sorted tasks by is_completed
