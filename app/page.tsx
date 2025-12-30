@@ -1,23 +1,103 @@
-'use server'
-import { TaskItem } from '@/components/TaskItem'
+'use client'
+import { signUpNewUser, signInWithEmail } from "@/utils/supabase/server";
+import {useState} from 'react'
+import { useRouter } from 'next/navigation'
 import {Title} from '@/components/Title'
-import { NewTaskForm } from '@/components/NewTaskForm'
-import { getTasksFromDB } from '@/utils/supabase/server' // Import DB fetcher directly
-export default async function Home() {
-  const userID = "b9c4569d-bd49-43e0-91ba-aa119a6d14fc"
-  const tasks = await getTasksFromDB(userID)
 
-  return (
-    <main>
-      <Title/>
-      <NewTaskForm/>      
-      <ul>  
-        {tasks.map(task => 
-          <TaskItem 
-            key={task.id} 
-            task={task}
-          />)}
-      </ul>
-    </main>
-  )
+/*
+* isSignUP = false.
+*   signup or sign in depends on which button user click 
+*       -> change button color 
+*           + change mode. 
+*           + submit button text change 
+*           + swap form onSubmit function.
+*/
+
+
+export default function loginPage(){
+    const [isSignUp, setIsSignUP] =useState(false)
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    const router = useRouter()
+
+    const handleSubmitSignUp = async (e:React.FormEvent) =>{
+        e.preventDefault()
+        await signUpNewUser(email, password)
+        console.log('User Added:', email, password)
+        setEmail('')
+        setPassword('')
+        
+        router.push('/dashboard')
+    }
+
+    const handleSubmitSignIn = async (e:React.FormEvent) =>{
+        e.preventDefault()
+        await signInWithEmail(email, password)
+        console.log('User Signed In:', email, password)
+        setEmail('')
+        setPassword('')
+        router.push('/dashboard')
+    }
+
+
+    
+    return(
+        <>
+        
+        <Title/>
+        <form 
+            onSubmit={isSignUp? handleSubmitSignUp : handleSubmitSignIn} 
+            className="flex flex-col sm:flex-row sm:flex-wrap gap-3 w-full max-w-3xl mx-auto mb-8"
+        >
+            <input 
+                type='email' 
+                placeholder="Enter Email..."
+                value={email}
+                onChange={e=>setEmail(e.target.value)}
+                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+            </input>
+            
+            <input 
+                type='password'
+                placeholder="Enter Password..."
+                value={password}
+                onChange={e=>setPassword(e.target.value)}
+                className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+            </input>
+            
+
+            
+            <button
+                type="submit"
+                className="bg-blue-600 text-white font-medium px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+                {isSignUp? "Sign Up" : "Log In"}
+            </button>
+
+            <div className="blockw-full flex justify-center gap-4 mt-2">
+                <button
+                    type="button"
+                    onClick={()=>setIsSignUP(false)}
+                    className={`font-medium px-6 py-2 rounded-lg transition-colors border-b-4 ${
+                                            !isSignUp ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'
+                                        }`}                >
+                    Log In
+                </button>
+                <button
+                    type="button"
+                    onClick={()=>setIsSignUP(true)}
+                    className={`font-medium px-6 py-2 rounded-lg transition-colors border-b-4 ${
+                                            isSignUp ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500'
+                                        }`}                >
+                    Sign Up
+                </button>
+            </div>
+
+
+        </form>
+        </>
+    )
 }

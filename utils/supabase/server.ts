@@ -2,6 +2,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { Task } from '@/types/custom'
+import { use } from 'react'
 
 //helper that creates a Supabase client on the server side
 //do this once per request
@@ -26,15 +27,35 @@ async function createSupabaseServerClient() {
     }
   )
 }
+export async function getCurrentUserId() {
+  const supabase = await createSupabaseServerClient()
+  
+  // getUser() is the secure method for server-side auth validation
+  const { data: { user }, error } = await supabase.auth.getUser()
 
-export async function getTasksFromDB(userId: string){
+  if (error || !user) {
+    console.error("User not authenticated:", error)
+    return null
+  }
+
+  return user.id
+}
+
+export async function getTasksFromDB(){
 
   const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+     console.error("No active session")
+     return []
+  }
+
   const { data, error } = await supabase
   .from('tasks')
   .select('*')
-  .eq('user_id', userId)
+  .eq('user_id', user.id)
   .order('created_at', { ascending: false })
+
   if(error){
     console.error("Error fetching tasks:", error)
     return []
@@ -44,11 +65,13 @@ export async function getTasksFromDB(userId: string){
   return data.sort((a,b) => a.is_completed - b.is_completed)
 }
 
-export async function addTaskToDB(userId: string, taskTitle: string, taskDescription: string =''){
+export async function addTaskToDB(taskTitle: string, taskDescription: string =''){
   const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
   const newTask:Task = {
       id: crypto.randomUUID(),
-      user_id: userId,
+      user_id: user.id,
       title: taskTitle,
       is_completed: false,
       created_at: new Date().toISOString(),
