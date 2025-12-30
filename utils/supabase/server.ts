@@ -1,12 +1,35 @@
 'use server'
-import { createClient } from '@supabase/supabase-js'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 import { Task } from '@/types/custom'
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! 
-const supabase = createClient(supabaseUrl, supabaseKey)
 
+//helper that creates a Supabase client on the server side
+//do this once per request
+async function createSupabaseServerClient() {
+  const cookieStore = await cookies()
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          cookieStore.set({ name, value, ...options })
+        },
+        remove(name: string, options: CookieOptions) {
+          cookieStore.set({ name, value: '', ...options })
+        },
+      },
+    }
+  )
+}
 
 export async function getTasksFromDB(userId: string){
+
+  const supabase = await createSupabaseServerClient()
   const { data, error } = await supabase
   .from('tasks')
   .select('*')
@@ -22,6 +45,7 @@ export async function getTasksFromDB(userId: string){
 }
 
 export async function addTaskToDB(userId: string, taskTitle: string, taskDescription: string =''){
+  const supabase = await createSupabaseServerClient()
   const newTask:Task = {
       id: crypto.randomUUID(),
       user_id: userId,
@@ -36,6 +60,7 @@ export async function addTaskToDB(userId: string, taskTitle: string, taskDescrip
 }
 
 export async function toggleTaskInDB(taskID: string, currentStatus: boolean){
+  const supabase = await createSupabaseServerClient()
   const { error } = await supabase
   .from('tasks')
   .update({ is_completed: !currentStatus })
@@ -45,6 +70,7 @@ export async function toggleTaskInDB(taskID: string, currentStatus: boolean){
 }
 
 export async function signUpNewUser(email:string, password: string) {
+  const supabase = await createSupabaseServerClient()
   const { data, error } = await supabase.auth.signUp({
     email: email,
     password: password,
@@ -52,11 +78,22 @@ export async function signUpNewUser(email:string, password: string) {
       emailRedirectTo: 'http://localhost:3000/',//TODO: Change to '/app' page
     },
   })
+
+  if (error) {
+      return { success: false, message: error.message }
+    }
+  return { success: true, message: 'Check your email for confirmation!' }
 }
 
 export async function signInWithEmail(email:string, password: string) {
+  const supabase = await createSupabaseServerClient()
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email,
     password: password,
   })
+
+  if (error) {
+      return { success: false, message: error.message }
+    }
+  return { success: true, message: 'Signed in successfully' }
 }

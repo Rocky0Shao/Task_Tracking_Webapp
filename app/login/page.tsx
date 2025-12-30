@@ -23,12 +23,16 @@ export default function loginPage(){
         e.preventDefault()
         await signUpNewUser(email, password)
         console.log('User Added:', email, password)
+        setEmail('')
+        setPassword('')
     }
 
     const handleSubmitSignIn = async (e:React.FormEvent) =>{
         e.preventDefault()
         await signInWithEmail(email, password)
         console.log('User Signed In:', email, password)
+        setEmail('')
+        setPassword('')
     }
 
 
@@ -51,7 +55,7 @@ export default function loginPage(){
             </input>
             
             <input 
-                type='text'
+                type='password'
                 placeholder="Enter Password..."
                 value={password}
                 onChange={e=>setPassword(e.target.value)}
@@ -91,3 +95,4 @@ export default function loginPage(){
         </form>
         </>
     )
+}
