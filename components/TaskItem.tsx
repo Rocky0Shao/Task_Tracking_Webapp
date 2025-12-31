@@ -19,6 +19,14 @@ export function TaskItem({ task}: { task: Task}){
                 {task.description}
             </span>
             
+            <button
+                type="button"
+                onClick={() => console.log('clicked')}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                Delete Task
+            </button>
+            
         </li>
     )
 }

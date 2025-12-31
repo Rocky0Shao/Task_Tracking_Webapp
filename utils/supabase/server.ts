@@ -14,14 +14,19 @@ async function createSupabaseServerClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
+        getAll() {
+          return cookieStore.getAll()
         },
-        set(name: string, value: string, options: CookieOptions) {
-          cookieStore.set({ name, value, ...options })
-        },
-        remove(name: string, options: CookieOptions) {
-          cookieStore.set({ name, value: '', ...options })
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            )
+          } catch {
+            // The `setAll` method was called from a Server Component.
+            // This can be ignored if you have middleware refreshing
+            // user sessions.
+          }
         },
       },
     }
@@ -88,6 +93,24 @@ export async function addTaskToDB(taskTitle: string, taskDescription: string =''
   }
 }
 
+export async function deleteTaskFromDB(taskId: string) { // Better to use ID than Title
+  const supabase = await createSupabaseServerClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+
+  const { error } = await supabase
+    .from('tasks')
+    .delete()
+    .eq('id', taskId) 
+    .eq('user_id', user.id)
+
+  if (error) {
+    console.error("Error deleting task:", error)
+  } else {
+    console.log("Task deleted successfully")
+  }
+}
+
 export async function toggleTaskInDB(taskID: string, currentStatus: boolean){
   const supabase = await createSupabaseServerClient()
   const { error } = await supabase
@@ -100,11 +123,12 @@ export async function toggleTaskInDB(taskID: string, currentStatus: boolean){
 
 export async function signUpNewUser(email:string, password: string) {
   const supabase = await createSupabaseServerClient()
+  const origin = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
   const { data, error } = await supabase.auth.signUp({
     email: email,
     password: password,
     options: {
-      emailRedirectTo: 'http://localhost:3000/',//TODO: Change to '/app' page
+      emailRedirectTo: `${origin}/`,//TODO: Change to '/app' page
     },
   })
 

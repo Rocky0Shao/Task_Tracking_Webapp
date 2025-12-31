@@ -25,4 +25,6 @@ Today (12/30) I have login/signup functions, but the logic sint'w roking.
 
 
 Today(12/31) I successfully added creat user -> add task for each user -> user able to login and see their individual tasks. 
+production build was failing, then I realized I have to add env vars to vercel itself. then it worked.
 The table couldn't insert data til I disableed RLS (might be bad, will change later. )
+now I'll add new functionality to remove tasks. 
