@@ -18,26 +18,57 @@ export default function loginPage(){
     const [isSignUp, setIsSignUP] =useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState<string | null>(null)
+    const [loading, setLoading] = useState(false)
 
     const router = useRouter()
 
     const handleSubmitSignUp = async (e:React.FormEvent) =>{
         e.preventDefault()
-        await signUpNewUser(email, password)
-        console.log('User Added:', email, password)
-        setEmail('')
-        setPassword('')
+        setError(null)
+        setLoading(true)
         
-        router.push('/dashboard')
+        try {
+            const result = await signUpNewUser(email, password)
+            if (result.success) {
+                console.log('User Added:', email, password)
+                setEmail('')
+                setPassword('')
+                // Use window.location for full page reload to ensure cookies are recognized
+                window.location.href = '/dashboard'
+            } else {
+                setError(result.message || 'Sign up failed')
+                setLoading(false)
+            }
+        } catch (err) {
+            setError('An unexpected error occurred')
+            setLoading(false)
+            console.error('Sign up error:', err)
+        }
     }
 
     const handleSubmitSignIn = async (e:React.FormEvent) =>{
         e.preventDefault()
-        await signInWithEmail(email, password)
-        console.log('User Signed In:', email, password)
-        setEmail('')
-        setPassword('')
-        router.push('/dashboard')
+        setError(null)
+        setLoading(true)
+        
+        try {
+            const result = await signInWithEmail(email, password)
+            if (result.success) {
+                console.log('User Signed In:', email, password)
+                setEmail('')
+                setPassword('')
+                // Use window.location for full page reload to ensure cookies are recognized
+                window.location.href = '/dashboard'
+            } else {
+                setError(result.message || 'Sign in failed')
+                setLoading(false)
+            }
+        } catch (err) {
+            setError('An unexpected error occurred')
+            setLoading(false)
+            console.error('Sign in error:', err)
+        }
     }
 
 
@@ -46,6 +77,11 @@ export default function loginPage(){
         <>
         
         <Title/>
+        {error && (
+            <div className="w-full max-w-3xl mx-auto mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                {error}
+            </div>
+        )}
         <form 
             onSubmit={isSignUp? handleSubmitSignUp : handleSubmitSignIn} 
             className="flex flex-col sm:flex-row sm:flex-wrap gap-3 w-full max-w-3xl mx-auto mb-8"
@@ -72,12 +108,13 @@ export default function loginPage(){
             
             <button
                 type="submit"
-                className="bg-blue-600 text-white font-medium px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                disabled={loading}
+                className="bg-blue-600 text-white font-medium px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                {isSignUp? "Sign Up" : "Log In"}
+                {loading ? "Loading..." : (isSignUp? "Sign Up" : "Log In")}
             </button>
 
-            <div className="blockw-full flex justify-center gap-4 mt-2">
+            <div className="block w-full flex justify-center gap-4 mt-2">
                 <button
                     type="button"
                     onClick={()=>setIsSignUP(false)}

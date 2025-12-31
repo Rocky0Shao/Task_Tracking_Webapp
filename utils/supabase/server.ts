@@ -110,6 +110,7 @@ export async function signUpNewUser(email:string, password: string) {
 
 export async function signInWithEmail(email:string, password: string) {
   const supabase = await createSupabaseServerClient()
+  console.log('Attempting to sign in with email:', email);
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email,
     password: password,
