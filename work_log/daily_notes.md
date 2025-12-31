@@ -16,4 +16,13 @@ refactor add/toggletask from client-side to server-side.
 now the form that adds task is client-side, and it internally calls server-side action to add task. The supabse RLS is disabled currently, and a test user is created. 
 
 
-today (12/29) sorted tasks by is_completed
+today (12/29) sorted tasks by is_completed. 
+I completed teh functions that can add a user (signup) to supabase,and to log in. 
+
+
+Today (12/30) I have login/signup functions, but the logic sint'w roking. 
+- user signup/login correctly -> redirect to app
+
+
+Today(12/31) I successfully added creat user -> add task for each user -> user able to login and see their individual tasks. 
+The table couldn't insert data til I disableed RLS (might be bad, will change later. )

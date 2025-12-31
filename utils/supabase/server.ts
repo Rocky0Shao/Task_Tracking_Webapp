@@ -80,6 +80,12 @@ export async function addTaskToDB(taskTitle: string, taskDescription: string =''
   const { error } = await supabase
   .from('tasks')
   .insert(newTask)
+
+  if (error){
+    console.error("Error adding task:", error)
+  }else{
+    console.log("Task added successfully")
+  }
 }
 
 export async function toggleTaskInDB(taskID: string, currentStatus: boolean){
