@@ -6,7 +6,7 @@ import { use } from 'react'
 
 //helper that creates a Supabase client on the server side
 //do this once per request
-async function createSupabaseServerClient() {
+export async function createSupabaseServerClient() {
   const cookieStore = await cookies()
 
   return createServerClient(

@@ -1,6 +1,6 @@
 'use client'
 import {Task} from '../types/custom';
-import { handleToggleTask } from "@/app/actions"; 
+import { handleToggleTask,handleDeleteTask } from "@/app/actions"; 
 
 export function TaskItem({ task}: { task: Task}){  
 
@@ -21,8 +21,8 @@ export function TaskItem({ task}: { task: Task}){
             
             <button
                 type="button"
-                onClick={() => console.log('clicked')}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                onClick={() => handleDeleteTask(task.id)}
+                className="px-4 py-2 bg-blue-600 font-medium text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                 Delete Task
             </button>

@@ -1,16 +1,25 @@
-# Project Overview
+# Task Tracker
 
 This is a Next.js task tracker application that uses Supabase for authentication and database storage. The application allows users to sign up, log in, and manage their tasks. The frontend is built with React and Tailwind CSS.
 
-## About the Project
+## Screenshots
 
-This project is a task tracker application built with the following technologies:
+| Login/Signup Page | App User Interface |
+| :---: | :---: |
+| ![Login/Signup Page](./demo_pics/Login_Signup.png) | ![App User Interface](./demo_pics/App_User_Interface.png) |
+
+## Features
+
+*   User authentication (sign up, log in, log out)
+*   Create, read, update, and delete tasks
+*   Protected routes for authenticated users
+*   Real-time database updates with Supabase
+
+## Technologies Used
 
 *   **Frontend:** Next.js, React, Tailwind CSS
 *   **Backend & Authentication:** Supabase
 *   **Deployment:** Vercel
-
-**Live Demo:** [https://task-tracker-eosin-two.vercel.app/](https://task-tracker-eosin-two.vercel.app/)
 
 ## Getting Started
 
@@ -39,7 +48,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
 
 ### Running the Development Server
 
-First, run the development server:
+To run the development server, use the following command:
 
 ```bash
 npm run dev
@@ -47,13 +56,15 @@ npm run dev
 
 The application will be available at [http://localhost:3000](http://localhost:3000).
 
-## Building and Running (Production)
+### Building for Production
 
 To build the application for production, use the following command:
 
 ```bash
 npm run build
 ```
+
+### Running in Production
 
 To run the application in production, use the following command:
 
