@@ -2,11 +2,18 @@
 
 This is a Next.js task tracker application that uses Supabase for authentication and database storage. The application allows users to sign up, log in, and manage their tasks. The frontend is built with React and Tailwind CSS.
 
+## Live Demo & Dev-Log
+
+Experience the application live: [Task Tracker App](https://task-tracker-eosin-two.vercel.app/)
+Watch the dev-log video: [Dev-Log Video](https://youtu.be/JtAChNo_H98)
+
 ## Screenshots
 
-| Login/Signup Page | App User Interface |
-| :---: | :---: |
-| ![Login/Signup Page](./demo_pics/Login_Signup.png) | ![App User Interface](./demo_pics/App_User_Interface.png) |
+### Login/Signup Page
+![Login/Signup Page](./demo_pics/Login_Signup.png)
+
+### App User Interface
+![App User Interface](./demo_pics/App_User_Interface.png)
 
 ## Features
 
